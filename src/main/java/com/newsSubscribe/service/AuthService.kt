@@ -61,7 +61,7 @@ class AuthService(
         val message = SimpleMailMessage()
         message.setTo(to)
         message.subject = "[NewsSubscribe] 일회용 인증 코드"
-        message.text = "요청하신 인증 코드는 다음과 같습니다:\n\n$code\n\n3분 이내에 입력해 주세요."
+        message.text = "요청하신 인증 코드는 다음과 같습니다:\n\n$code"
         mailSender.send(message)
     }
 }
