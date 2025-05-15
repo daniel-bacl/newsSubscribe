@@ -87,6 +87,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: false
           script: |
+            cd /home/ubuntu/app
             if [ -f ./deploy.sh ]; then
               chmod +x ./deploy.sh
               ./deploy.sh
