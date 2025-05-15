@@ -31,6 +31,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew bootJar
 
+      - name: List built JARs
+        run: ls -lh build/libs/
+
       - name: Copy jar to EC2 via SCP
         uses: appleboy/scp-action@v0.1.3
         with:

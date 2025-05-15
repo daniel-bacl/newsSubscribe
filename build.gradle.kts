@@ -5,10 +5,9 @@ plugins {
     kotlin("jvm") version "1.9.22"
     kotlin("plugin.spring") version "1.9.22"
     kotlin("plugin.jpa") version "1.9.22"
-    war // 💡 WAR 배포 시
 }
 
-group = "org.example"
+group = "com.newssubscribe"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -39,6 +38,7 @@ dependencies {
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
     mainClass.set("com.newssubscribe.NewsSubscribeApplicationKt")
+    archiveFileName.set("new-app.jar") // JAR 이름 고정
 }
 
 tasks.test {
