@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: prod  # 실서버용 프로파일 활성화
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true

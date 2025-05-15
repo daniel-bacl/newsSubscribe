@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마이 키워드</title>
+</head>
+<body>
+
+<h2>나의 키워드 목록</h2>
+
+<!-- 메시지 출력 -->
+<div th:if="${message}" style="color: green;">
+    <p th:text="${message}"></p>
+</div>
+
+<!-- 키워드 목록 -->
+<ul>
+    <li th:each="keyword : ${keywords}">
+        <span th:text="${keyword.name}"></span>
+        <form th:action="@{/keywords/delete}" method="post" style="display:inline;">
+            <input type="hidden" name="keywordId" th:value="${keyword.id}">
+            <button type="submit">삭제</button>
+        </form>
+    </li>
+</ul>
+
+<hr/>
+
+<!-- 키워드 추가 폼 -->
+<h3>키워드 추가</h3>
+<form th:action="@{/keywords/add}" method="post">
+    <input type="text" name="keyword" required>
+    <button type="submit">추가</button>
+</form>
+
+</body>
+</html>
