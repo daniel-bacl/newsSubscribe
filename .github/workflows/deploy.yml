@@ -41,7 +41,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           source: "build/libs/new-app.jar"
-          target: "/tmp/new-app.jar"
+          target: "/tmp/"
 
       - name: Check if JAR exists on EC2
         uses: appleboy/ssh-action@v1.0.3
