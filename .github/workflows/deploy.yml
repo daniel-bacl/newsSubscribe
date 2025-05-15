@@ -38,13 +38,13 @@ jobs:
 
       - name: Generate .env file
         run: |
-          echo "DB_HOST=${DB_HOST}" >> .env
-          echo "DB_PORT=${DB_PORT}" >> .env
-          echo "DB_NAME=${DB_NAME}" >> .env
-          echo "DB_USERNAME=${DB_USERNAME}" >> .env
-          echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
-          echo "MAIL_USERNAME=${MAIL_USERNAME}" >> .env
-          echo "MAIL_PASSWORD=${MAIL_PASSWORD}" >> .env
+          echo "DB_HOST=$DB_HOST" >> .env
+          echo "DB_PORT=$DB_PORT" >> .env
+          echo "DB_NAME=$DB_NAME" >> .env
+          echo "DB_USERNAME=$DB_USERNAME" >> .env
+          echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+          echo "MAIL_USERNAME=$MAIL_USERNAME" >> .env
+          echo "MAIL_PASSWORD=$MAIL_PASSWORD" >> .env
           cat .env
 
       - name: Debug artifact paths
@@ -60,9 +60,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: |
-            ./build/libs/new-app.jar
-            ./.env
+          source: "./build/libs/new-app.jar,./.env"
           target: /tmp/
 
       - name: Check if JAR exists on EC2
@@ -89,36 +87,9 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: false
           script: |
-            set -e
-
-            echo "📦 디렉토리 준비"
-            mkdir -p /home/ubuntu/app/backup
-            cd /home/ubuntu/app
-
-            echo "🛑 기존 앱 종료"
-            if [ -f ./stop.sh ]; then
-              chmod +x ./stop.sh
-              ./stop.sh || echo "❌ stop.sh 실행 실패 (무시)"
-            fi
-
-            echo "📁 기존 JAR 백업"
-            if [ -f ./app.jar ]; then
-              cp app.jar ./backup/app-$(date +%F-%T).jar
-              rm -f app.jar
-            fi
-
-            echo "🚚 새로운 파일 이동"
-            mv /tmp/build/libs/new-app.jar ./app.jar
-            mv /tmp/.env ./app/.env
-
-            echo "🚀 새 앱 실행"
-            if [ -f ./start.sh ]; then
-              chmod +x ./start.sh
-              ./start.sh || echo "❌ start.sh 실행 실패"
+            if [ -f ./deploy.sh ]; then
+              chmod +x ./deploy.sh
+              ./deploy.sh
             else
-              export $(grep -v '^#' .env | xargs)
-              nohup java -Dspring.profiles.active=prod -jar ./app.jar > app.log 2>&1 &
+              echo "❌ deploy.sh 가 존재하지 않습니다."
             fi
-
-            echo "📌 현재 실행 중인 Java 프로세스"
-            ps -ef | grep java || true
