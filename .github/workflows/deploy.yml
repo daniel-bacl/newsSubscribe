@@ -47,6 +47,13 @@ jobs:
           echo "MAIL_PASSWORD=${MAIL_PASSWORD}" >> .env
           cat .env
 
+      - name: Debug artifact paths
+        run: |
+          echo "📂 Build output:"
+          ls -lh ./build/libs/
+          echo "📂 Current directory:"
+          ls -lh .
+
       - name: Copy files to EC2 via SCP
         uses: appleboy/scp-action@v0.1.3
         with:
@@ -54,8 +61,8 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           source: |
-            build/libs/new-app.jar
-            .env
+            ./build/libs/new-app.jar
+            ./.env
           target: /tmp/
 
       - name: Check if JAR exists on EC2
