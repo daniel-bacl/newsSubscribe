@@ -1,7 +1,7 @@
-package com.newsSubscribe.service
+package com.newssubscribe.service
 
-import com.newsSubscribe.entity.User
-import com.newsSubscribe.repository.UserRepository
+import com.newssubscribe.entity.User
+import com.newssubscribe.repository.UserRepository
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service

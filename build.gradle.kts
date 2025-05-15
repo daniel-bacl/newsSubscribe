@@ -37,6 +37,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 }
 
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+    mainClass.set("com.newssubscribe.NewsSubscribeApplicationKt")
+}
+
 tasks.test {
     useJUnitPlatform()
 }

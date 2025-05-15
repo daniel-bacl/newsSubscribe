@@ -1,10 +1,10 @@
-package com.newsSubscribe.service
+package com.newssubscribe.service
 
-import com.newsSubscribe.entity.Keyword
-import com.newsSubscribe.entity.Subscribe
-import com.newsSubscribe.repository.KeywordRepository
-import com.newsSubscribe.repository.SubscribeRepository
-import com.newsSubscribe.repository.UserRepository
+import com.newssubscribe.entity.Keyword
+import com.newssubscribe.entity.Subscribe
+import com.newssubscribe.repository.KeywordRepository
+import com.newssubscribe.repository.SubscribeRepository
+import com.newssubscribe.repository.UserRepository
 import org.springframework.stereotype.Service
 
 @Service

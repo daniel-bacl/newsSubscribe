@@ -1,8 +1,8 @@
-package com.newsSubscribe.repository
+package com.newssubscribe.repository
 
-import com.newsSubscribe.entity.Keyword
-import com.newsSubscribe.entity.Subscribe
-import com.newsSubscribe.entity.User
+import com.newssubscribe.entity.Keyword
+import com.newssubscribe.entity.Subscribe
+import com.newssubscribe.entity.User
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface SubscribeRepository : JpaRepository<Subscribe, Long> {

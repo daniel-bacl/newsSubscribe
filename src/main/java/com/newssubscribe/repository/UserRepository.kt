@@ -1,6 +1,6 @@
-package com.newsSubscribe.repository
+package com.newssubscribe.repository
 
-import com.newsSubscribe.entity.User
+import com.newssubscribe.entity.User
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface UserRepository : JpaRepository<User, Long> {

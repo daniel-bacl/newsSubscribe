@@ -1,6 +1,6 @@
-package com.newsSubscribe.controller
+package com.newssubscribe.controller
 
-import com.newsSubscribe.service.AuthService
+import com.newssubscribe.service.AuthService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*

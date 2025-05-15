@@ -1,4 +1,4 @@
-package com.newsSubscribe.service
+package com.newssubscribe.service
 
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper

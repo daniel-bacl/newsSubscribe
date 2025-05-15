@@ -1,4 +1,4 @@
-package com.newsSubscribe.entity
+package com.newssubscribe.entity
 
 import jakarta.persistence.*
 

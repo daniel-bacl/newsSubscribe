@@ -1,7 +1,7 @@
-package com.newsSubscribe.controller
+package com.newssubscribe.controller
 
 import org.springframework.ui.Model
-import com.newsSubscribe.service.KeywordService
+import com.newssubscribe.service.KeywordService
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
