@@ -51,11 +51,11 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
             echo "JAR 파일 존재 여부 확인:"
-            if [ -f /tmp/new-app.jar ]; then
-              echo "✅ /tmp/new-app.jar 존재 확인됨"
-              ls -lh /tmp/new-app.jar
+            if [ -f /tmp/build/libs/new-app.jar ]; then
+              echo "✅ /tmp/build/libs/new-app.jar 존재 확인됨"
+              ls -lh /tmp/build/libs/new-app.jar
             else
-              echo "❌ /tmp/new-app.jar 없음!"
+              echo "❌ /tmp/build/libs/new-app.jar 없음!"
               exit 1
             fi
 
@@ -86,10 +86,10 @@ jobs:
             fi
 
             echo "새로운 JAR 이동"
-            if [ -f /tmp/new-app.jar ]; then
-              mv /tmp/new-app.jar ./app.jar
+            if [ -f /tmp/build/libs/new-app.jar ]; then
+              mv /tmp/build/libs/new-app.jar ./app.jar
             else
-              echo "/tmp/new-app.jar가 존재하지 않습니다"
+              echo "/tmp/build/libs/new-app.jar가 존재하지 않습니다"
               exit 1
             fi
 
