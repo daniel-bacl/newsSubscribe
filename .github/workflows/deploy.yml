@@ -40,7 +40,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: "build/libs/*.jar"
+          source: "build/libs/new-app.jar"
           target: "/tmp/new-app.jar"
 
       - name: Deploy to EC2 via SSH
@@ -49,20 +49,21 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script_stop: false
           script: |
-            set -e  # 하나라도 실패하면 전체 중단
+            set -e
 
             echo "앱 디렉토리로 이동"
             mkdir -p /home/ubuntu/app/backup
             cd /home/ubuntu/app
 
-            echo "앱 중지"
+            echo "🛑 기존 앱 종료"
             if [ -f ./stop.sh ]; then
               chmod +x ./stop.sh
-              ./stop.sh
+              ./stop.sh || echo "stop.sh 실행 실패 (무시)"
             fi
 
-            echo "기존 JAR 백업 및 삭제"
+            echo "💾 기존 JAR 백업"
             if [ -f ./app.jar ]; then
               cp app.jar ./backup/app-$(date +%F-%T).jar
               rm -f app.jar
@@ -76,13 +77,13 @@ jobs:
               exit 1
             fi
 
-            echo "앱 실행"
+            echo "🚀 새 앱 실행"
             if [ -f ./start.sh ]; then
               chmod +x ./start.sh
-              ./start.sh
+              ./start.sh || echo "start.sh 실행 실패"
             else
               nohup java -jar ./app.jar > app.log 2>&1 &
             fi
 
-            echo "실행된 프로세스 확인"
-            ps -ef | grep app.jar || true
+            echo "📌 현재 실행 중인 Java 프로세스"
+            ps -ef | grep java || true
