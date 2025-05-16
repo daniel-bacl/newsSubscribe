@@ -13,7 +13,7 @@ class User(
     @Column(nullable = false, unique = true)
     var email: String = "",
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     var authCode: String? = null,
 
     var createdAt: LocalDateTime = LocalDateTime.now()
