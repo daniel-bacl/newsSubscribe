@@ -2,15 +2,13 @@ package com.newssubscribe.service
 
 import com.newssubscribe.entity.User
 import com.newssubscribe.repository.UserRepository
-import org.springframework.mail.SimpleMailMessage
-import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
 class AuthService(
     private val userRepository: UserRepository,
-    private val mailSender: JavaMailSender
+    private val mailSenderService: MailSenderService
 ) {
     fun sendAuthCode(email: String) {
         // 이메일 형식 검증 (이중 체크)
@@ -22,8 +20,9 @@ class AuthService(
         // 랜덤 8자리 코드 생성
         val code = generateCode()
 
-        // 이메일 전송
-        sendMail(email, code)
+        val subject = "[NewsSubscribe] 일회용 인증 코드"
+        val body = "요청하신 인증 코드는 다음과 같습니다:\n\n$code"
+        mailSenderService.send(email, subject, body)
 
         // DB 저장 (기존 사용자면 update, 아니면 insert)
         val existingUser = userRepository.findByEmail(email)
@@ -54,13 +53,5 @@ class AuthService(
         return (1..8)
             .map { chars.random() }
             .joinToString("")
-    }
-
-    private fun sendMail(to: String, code: String) {
-        val message = SimpleMailMessage()
-        message.setTo(to)
-        message.subject = "[NewsSubscribe] 일회용 인증 코드"
-        message.text = "요청하신 인증 코드는 다음과 같습니다:\n\n$code"
-        mailSender.send(message)
     }
 }

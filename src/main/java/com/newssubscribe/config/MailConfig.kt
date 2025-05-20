@@ -16,11 +16,17 @@ class MailConfig {
     @Value("\${spring.mail.password}")
     private lateinit var password: String
 
+    @Value("\${spring.mail.host}")
+    private lateinit var mailHost: String
+
+    @Value("\${spring.mail.port}")
+    private var mailPort: Int = 587
+
     @Bean
     fun javaMailSender(): JavaMailSender {
         val mailSender = JavaMailSenderImpl()
-        mailSender.host = "smtp.gmail.com"
-        mailSender.port = 587
+        mailSender.host = mailHost
+        mailSender.port = mailPort
         mailSender.username = username
         mailSender.password = password
 

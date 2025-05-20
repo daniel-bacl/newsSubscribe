@@ -2,6 +2,7 @@ package com.newssubscribe.controller
 
 import com.newssubscribe.service.AuthService
 import jakarta.servlet.http.HttpSession
+import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.*
 class LoginController(
     private val authService: AuthService
 ) {
+
+    private val logger = LoggerFactory.getLogger(LoginController::class.java)
+
     @GetMapping("/")
     fun loginPage(): String = "login"
 
@@ -27,6 +31,7 @@ class LoginController(
             authService.sendAuthCode(email)
             ResponseEntity.ok("인증 코드가 전송되었습니다.")
         } catch (e: Exception) {
+            logger.error("인증 코드 전송 중 오류 발생 - 이메일: $email", e)
             ResponseEntity.internalServerError().body("인증 코드 전송 중 오류가 발생했습니다.")
         }
     }
