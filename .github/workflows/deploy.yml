@@ -14,6 +14,7 @@ jobs:
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      MAIL_HOST: ${{secrets.MAIL_HOST}}
       MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
       MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
 
@@ -45,6 +46,7 @@ jobs:
           echo "DB_PASSWORD=$DB_PASSWORD" >> .env
           echo "MAIL_USERNAME=$MAIL_USERNAME" >> .env
           echo "MAIL_PASSWORD=$MAIL_PASSWORD" >> .env
+          echo "MAIL_HOST=$MAIL_HOST" >> .env
           cat .env
 
       - name: Debug artifact paths
