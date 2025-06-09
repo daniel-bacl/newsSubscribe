@@ -36,9 +36,24 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 }
 
+// JVM 설정
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = "17"
+}
+
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
     mainClass.set("com.newssubscribe.NewsSubscribeApplicationKt")
-    archiveFileName.set("new-app.jar") // JAR 이름 고정
+    archiveFileName.set("new-app.jar")
 }
 
 tasks.test {
