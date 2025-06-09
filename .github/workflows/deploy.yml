@@ -44,15 +44,13 @@ jobs:
         with:
           version: v1.29.2
 
-      - name: Generate kubeconfig from secret
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > ~/.kube/config
+      - name: Configure kubeconfig dynamically
+        run: aws eks update-kubeconfig --name news-cluster --region ap-northeast-2
 
       - name: Debug AWS and kubectl connectivity
         run: |
           aws sts get-caller-identity
-          kubectl version --short
+          kubectl version
           kubectl get nodes || true
 
       - name: Install Argo Rollouts
@@ -72,7 +70,7 @@ jobs:
             --from-literal=MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
             --from-literal=MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
 
-      - name: Deploy to EKS using kubectl
+      - name: Deploy Rollout and Services
         run: |
           kubectl apply -f k8s/rollout.yaml
           kubectl apply -f k8s/spring-active.yaml
