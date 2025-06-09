@@ -49,6 +49,12 @@ jobs:
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > ~/.kube/config
 
+      - name: Debug AWS and kubectl connectivity
+        run: |
+          aws sts get-caller-identity
+          kubectl version --short
+          kubectl get nodes || true
+
       - name: Install Argo Rollouts
         run: |
           kubectl apply -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml --validate=false
