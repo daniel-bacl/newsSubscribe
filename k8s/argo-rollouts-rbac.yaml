@@ -54,6 +54,7 @@ rules:
       - clusteranalysistemplates
       - analysisruns/finalizers
       - rollouts/finalizers
+      - rollouts/status
       - events
       - leases
     verbs: ["*"]
