@@ -69,4 +69,8 @@ jobs:
 
       - name: Deploy Argo Rollouts and Services
         run: |
-          kubectl apply -f k8s/
+          kubectl apply -f spring-active.yaml
+          kubectl apply -f spring-preview.yaml
+          kubectl apply -f argo-rollouts-rbac.yaml
+          kubectl apply -f rollout.yaml
+
