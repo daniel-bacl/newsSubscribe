@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: spring-app
-          image: ecr-repo-url  # GitHub Actions에서 sed로 치환됨
+          image: 635140758252.dkr.ecr.ap-northeast-2.amazonaws.com/spring-app:latest
           ports:
             - containerPort: 8080
           readinessProbe:

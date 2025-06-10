@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argo-rollouts
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: argo-rollouts-config-role
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argo-rollouts-config-binding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: argo-rollouts
+    namespace: default
+roleRef:
+  kind: Role
+  name: argo-rollouts-config-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argo-rollouts-role
+rules:
+  - apiGroups:
+      - ""
+      - apps
+      - batch
+      - extensions
+      - networking.k8s.io
+      - argoproj.io
+      - coordination.k8s.io
+    resources:
+      - deployments
+      - replicasets
+      - services
+      - pods
+      - ingresses
+      - rollouts
+      - experiments
+      - analysisruns
+      - analysistemplates
+      - clusteranalysistemplates
+      - analysisruns/finalizers
+      - rollouts/finalizers
+      - events
+      - leases
+    verbs: ["*"]
+  - apiGroups: [ "" ]
+    resources: [ "secrets" ]
+    verbs: [ "get", "watch", "list" ]
+  - apiGroups: [ "batch" ]
+    resources: [ "jobs" ]
+    verbs: [ "get", "watch", "list" ]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: argo-rollouts-binding
+subjects:
+  - kind: ServiceAccount
+    name: argo-rollouts
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: argo-rollouts-role
+  apiGroup: rbac.authorization.k8s.io

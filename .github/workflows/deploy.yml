@@ -34,8 +34,6 @@ jobs:
           IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO }}:latest
           echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
 
-          sed -i "s|ecr-repo-url|$IMAGE_URI|g" k8s/rollout.yaml
-
           docker build -t $IMAGE_URI .
           docker push $IMAGE_URI
 
