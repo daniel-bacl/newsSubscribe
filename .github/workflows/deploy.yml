@@ -33,17 +33,16 @@ jobs:
         run: |
           IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO }}:latest
           echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
-
           docker build -t $IMAGE_URI .
           docker push $IMAGE_URI
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
-          version: v1.29.2
+          version: v1.32.0
 
       - name: Configure kubeconfig dynamically
-        run: aws eks update-kubeconfig --name news-cluster --region ap-northeast-2
+        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
 
       - name: Debug AWS and kubectl connectivity
         run: |
@@ -68,8 +67,6 @@ jobs:
             --from-literal=MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
             --from-literal=MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
 
-      - name: Deploy Rollout and Services
+      - name: Deploy Argo Rollouts and Services
         run: |
-          kubectl apply -f k8s/rollout.yaml
-          kubectl apply -f k8s/spring-active.yaml
-          kubectl apply -f k8s/spring-preview.yaml
+          kubectl apply -f k8s/
