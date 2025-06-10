@@ -16,3 +16,13 @@ spring:
           auth: true
           starttls:
             enable: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["health", "info"]
+  endpoint:
+    health:
+      show-details: always
+server:
+  port: 8080

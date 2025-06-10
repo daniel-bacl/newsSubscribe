@@ -34,6 +34,8 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j:8.2.0")
     // thymeleaf
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    // health check
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 }
 
 // JVM 설정
