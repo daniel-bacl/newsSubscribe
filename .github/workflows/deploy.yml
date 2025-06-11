@@ -1,13 +1,15 @@
-name: CI/CD to EKS
+name: Deploy to EKS via Argo Rollouts
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPO: ${{ secrets.ECR_REPO }}
-  EKS_CLUSTER_NAME: news-cluster
+  ECR_REGISTRY: 635140758252.dkr.ecr.ap-northeast-2.amazonaws.com
+  ECR_REPOSITORY: spring-app
+  IMAGE_TAG: v1.0.${{ github.run_number }}
 
 jobs:
   rollout-deploy:
@@ -26,33 +28,17 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build and Push Docker image to ECR
         run: |
-          IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO }}:latest
-          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
-          docker build -t $IMAGE_URI .
-          docker push $IMAGE_URI
+          aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REGISTRY
 
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: v1.32.0
-
-      - name: Configure kubeconfig dynamically
-        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
-
-      - name: Debug AWS and kubectl connectivity
+      - name: Build Docker image
         run: |
-          aws sts get-caller-identity
-          kubectl version
-          kubectl get nodes || true
+          docker build -t $ECR_REPOSITORY:${{ env.IMAGE_TAG }} .
+          docker tag $ECR_REPOSITORY:${{ env.IMAGE_TAG }} $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.IMAGE_TAG }}
 
-      - name: Install Argo Rollouts
+      - name: Push Docker image to ECR
         run: |
-          kubectl apply -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml --validate=false
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.IMAGE_TAG }}
 
       - name: Create Kubernetes Secret for Spring Env
         run: |
@@ -67,7 +53,16 @@ jobs:
             --from-literal=MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
             --from-literal=MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
 
-      - name: Deploy Argo Rollouts and Services
+      - name: Set image tag in rollout.yaml
+        run: |
+          sed -i "s|\(image: $ECR_REGISTRY/$ECR_REPOSITORY:\).*|\1${{ env.IMAGE_TAG }}|" k8s/rollout.yaml
+          sed -i "s|\(version:\).*|\1 ${{ env.IMAGE_TAG }}|" k8s/rollout.yaml
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region $AWS_REGION --name news-cluster
+
+      - name: Deploy rollout to EKS
         run: |
           kubectl apply -f k8s/spring-active.yaml
           kubectl apply -f k8s/spring-preview.yaml
