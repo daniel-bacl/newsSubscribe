@@ -11,10 +11,11 @@ spec:
     metadata:
       labels:
         app: spring-app
+        version: v1.0.1
     spec:
       containers:
         - name: spring-app
-          image: 635140758252.dkr.ecr.ap-northeast-2.amazonaws.com/spring-app:latest
+          image: 635140758252.dkr.ecr.ap-northeast-2.amazonaws.com/spring-app:v1.0.1
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -30,4 +31,4 @@ spec:
     blueGreen:
       activeService: spring-active
       previewService: spring-preview
-      autoPromotionEnabled: true  # ✅ readinessProbe 통과 후 자동 전환
+      autoPromotionEnabled: true
