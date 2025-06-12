@@ -22,6 +22,10 @@ class KeywordController(
 
         val keywords = keywordService.getKeywordsByEmail(email)
         model.addAttribute("keywords", keywords)
+
+        val sendHour = keywordService.getSendHourByEmail(email)
+        model.addAttribute("sendHour", sendHour)
+
         return "main"
     }
 
@@ -50,6 +54,19 @@ class KeywordController(
 
         keywordService.deleteKeyword(email, keywordId)
         redirect.addFlashAttribute("message", "키워드가 삭제되었습니다.")
+        return "redirect:/main"
+    }
+
+    @PostMapping("/send-hour")
+    fun updateSendHour(
+        @RequestParam sendHour: String,
+        session: HttpSession,
+        redirect: RedirectAttributes
+    ): String {
+        val email = session.getAttribute("email") as? String ?: return "redirect:/"
+
+        keywordService.updateSendHour(email, sendHour)
+        redirect.addFlashAttribute("message", "발송 시간이 저장되었습니다.")
         return "redirect:/main"
     }
 }

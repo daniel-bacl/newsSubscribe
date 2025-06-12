@@ -59,4 +59,18 @@ class KeywordService(
         keyword.subscribeCount = (keyword.subscribeCount - 1).coerceAtLeast(0)
         keywordRepository.save(keyword)
     }
+
+    // 사용자 발송 시간 조회
+    fun getSendHourByEmail(email: String): String? {
+        return userRepository.findByEmail(email)?.sendHour
+    }
+
+    // 사용자 발송 시간 저장
+    fun updateSendHour(email: String, sendHour: String) {
+        val user = userRepository.findByEmail(email)
+            ?: throw IllegalArgumentException("사용자를 찾을 수 없습니다.")
+
+        user.sendHour = sendHour
+        userRepository.save(user)
+    }
 }

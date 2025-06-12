@@ -80,6 +80,23 @@
 </ul>
 
 <hr/>
+<h3>뉴스 알림 시간 설정</h3>
+<form th:action="@{/send-hour}" method="post" style="margin-bottom:20px;">
+    <label for="sendHour">시간(0~23):</label>
+    <select name="sendHour" id="sendHour" required>
+        <option th:each="h : ${#numbers.sequence(0, 23)}"
+                th:value="${h}"
+                th:text="${h}"
+                th:selected="${h} == ${sendHour}">
+        </option>
+    </select>
+    <button type="submit">저장</button>
+</form>
+<p>
+    현재 설정된 알림 시간:
+    <span th:text="${sendHour != null ? sendHour + '시' : '미설정'}"></span>
+</p>
+<hr/>
 
 <!-- 키워드 추가 폼 -->
 <h3>키워드 추가</h3>

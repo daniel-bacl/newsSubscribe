@@ -16,5 +16,8 @@ class User(
     @Column(nullable = true)
     var authCode: String? = null,
 
+    @Column(name = "send_hour", nullable = true)
+    var sendHour: String? = null,
+
     var createdAt: LocalDateTime = LocalDateTime.now()
 )
