@@ -63,6 +63,10 @@ jobs:
           sed -i "s|\(image: $ECR_REGISTRY/$ECR_REPOSITORY:\).*|\1${{ env.IMAGE_TAG }}|" k8s/rollout.yaml
           sed -i "s|\(version:\).*|\1 ${{ env.IMAGE_TAG }}|" k8s/rollout.yaml
 
+      - name: Install Argo Rollouts CRDs
+        run: |
+          kubectl apply -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+
       - name: Deploy rollout to EKS
         run: |
           kubectl apply -f k8s/spring-active.yaml
