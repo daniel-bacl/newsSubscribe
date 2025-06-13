@@ -34,3 +34,6 @@ management:
       show-details: always
 server:
   port: 8080
+  servlet:
+    session:
+      timeout: 60m
