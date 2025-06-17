@@ -73,19 +73,3 @@ jobs:
           kubectl apply -f k8s/spring-preview.yaml
           kubectl apply -f k8s/argo-rollouts-rbac.yaml
           kubectl apply -f k8s/rollout.yaml
-          kubectl apply -f k8s/spring-ingress.yaml
-
-      - name: Show Ingress ALB URL
-        run: |
-          INGRESS_HOST=$(kubectl get ingress spring-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-          echo "::set-output name=alb_url::http://$INGRESS_HOST"
-        id: ingress
-
-      - name: Comment Ingress URL on PR
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          message: |
-            🚀 **Ingress ALB Endpoint**
-            Your app is deployed and accessible at:
-            [${{ steps.ingress.outputs.alb_url }}](${{ steps.ingress.outputs.alb_url }})
