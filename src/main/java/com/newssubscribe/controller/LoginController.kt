@@ -30,6 +30,8 @@ class LoginController(
         return try {
             authService.sendAuthCode(email)
             ResponseEntity.ok("인증 코드가 전송되었습니다.")
+        } catch (e: IllegalStateException) {
+            ResponseEntity.badRequest().body(e.message)
         } catch (e: Exception) {
             logger.error("인증 코드 전송 중 오류 발생 - 이메일: $email", e)
             ResponseEntity.internalServerError().body("인증 코드 전송 중 오류가 발생했습니다.")
