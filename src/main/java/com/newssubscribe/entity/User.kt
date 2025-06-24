@@ -13,7 +13,7 @@ class User(
     @Column(nullable = false, unique = true)
     var email: String = "",
 
-    @Column(nullable = true)
+    @Column(name = "auth_code", columnDefinition = "CHAR(8)", nullable = true)
     var authCode: String? = null,
 
     @Column(name = "send_hour", nullable = true)
