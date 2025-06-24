@@ -45,7 +45,7 @@ class LoginController(
         model: Model,
         session: HttpSession
     ): String {
-        return if (authService.verifyCode(email, authCode)) {
+        return if (authCode.matches(Regex("^[a-zA-Z0-9]{8}$")) && authService.verifyCode(email, authCode)) {
             session.setAttribute("email", email)
             "redirect:/main"
         } else {

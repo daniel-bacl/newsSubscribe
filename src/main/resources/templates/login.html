@@ -101,15 +101,6 @@
 </head>
 <body>
 
-<!-- 메시지 출력 -->
-<div th:if="${message}" class="message">
-  <p th:text="${message}"></p>
-</div>
-
-<!-- 오류 메시지 출력 -->
-<div th:if="${error}" class="error">
-  <p id="errorMessage" th:text="${error}"></p>
-</div>
 
 <!-- 하나의 로그인 폼 -->
 <div class="container">
@@ -121,6 +112,11 @@
 
     <button id="sendCodeBtn" type="button" onclick="sendAuthCode()">인증 코드 전송</button>
     <br/><br/>
+
+    <!-- 오류 메시지 출력 -->
+    <div th:if="${error}" class="error" style="color: red; margin-top: 10px;">
+      <p id="errorMessage" th:text="${error}"></p>
+    </div>
 
     <label for="authCode">인증 코드:</label>
     <input type="text" id="authCode" name="authCode" maxlength="8" required>
