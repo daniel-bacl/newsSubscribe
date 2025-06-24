@@ -33,7 +33,6 @@ class AuthService(
         mailSenderService.send(email, subject, body)
 
         // DB 저장 (기존 사용자면 update, 아니면 insert)
-        val existingUser = userRepository.findByEmail(email)
         if (existingUser != null) {
             existingUser.authCode = code
             existingUser.createdAt = LocalDateTime.now()
