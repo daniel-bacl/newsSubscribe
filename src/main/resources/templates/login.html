@@ -86,19 +86,21 @@
         alert("요청 중 오류가 발생했습니다: " + error);
       });
     }
+
+    // 페이지 로드시 error 메시지에 '코드'가 포함되면 버튼 disable
+    window.addEventListener("DOMContentLoaded", function () {
+      const errorElement = document.getElementById("errorMessage");
+      const sendCodeBtn = document.getElementById("sendCodeBtn");
+
+      if (errorElement && errorElement.textContent.includes("코드")) {
+        sendCodeBtn.disabled = true;
+      }
+    });
+  
   </script>
 </head>
 <body>
 
-<!-- 메시지 출력 -->
-<div th:if="${message}" class="message">
-  <p th:text="${message}"></p>
-</div>
-
-<!-- 오류 메시지 출력 -->
-<div th:if="${error}" class="error">
-  <p th:text="${error}"></p>
-</div>
 
 <!-- 하나의 로그인 폼 -->
 <div class="container">
@@ -108,8 +110,13 @@
     <label for="email">이메일:</label>
     <input type="email" id="email" name="email" required>
 
-    <button type="button" onclick="sendAuthCode()">인증 코드 전송</button>
+    <button id="sendCodeBtn" type="button" onclick="sendAuthCode()">인증 코드 전송</button>
     <br/><br/>
+
+    <!-- 오류 메시지 출력 -->
+    <div th:if="${error}" class="error" style="color: red; margin-top: 10px;">
+      <p id="errorMessage" th:text="${error}"></p>
+    </div>
 
     <label for="authCode">인증 코드:</label>
     <input type="text" id="authCode" name="authCode" maxlength="8" required>

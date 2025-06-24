@@ -31,7 +31,7 @@
         }
         input[type="text"] {
             padding: 10px;
-            width: 300px;
+            width: 250px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
@@ -50,6 +50,24 @@
         hr {
             margin: 40px 0;
         }
+        .main-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        .keyword-section,
+        .time-section {
+            flex: 1;
+        }
+        .time-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        #currentSendHour {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -61,15 +79,51 @@
     </form>
 </div>
 
-<h2>나의 키워드 목록</h2>
+<div class="main-section">
+    <!-- 왼쪽: 키워드 추가 -->
+    <div class="keyword-section">
+        <h3>키워드 추가</h3>
+        <form th:action="@{/keywords/add}" method="post">
+            <input type="text" name="keyword" maxlength="100" required>
+            <button type="submit">추가</button>
+        </form>
+    </div>
 
-<!-- 메시지 출력 -->
-<div th:if="${message}" style="color: green;">
-    <p th:text="${message}"></p>
+    <!-- 오른쪽: 뉴스 알림 설정 -->
+    <div class="time-section">
+        <h3>뉴스 알림 시간 설정</h3>
+        <form th:action="@{/send-hour}" method="post" style="margin-bottom:20px;">
+            <label for="sendHour">시간(0~23):</label>
+            <select name="sendHour" id="sendHour" required>
+                <option th:each="h : ${#numbers.sequence(0, 23)}"
+                        th:value="${h}"
+                        th:text="${h}"
+                        th:selected="${h} == ${sendHour}">
+                </option>
+            </select>
+            <button type="submit">저장</button>
+        </form>
+        <p>
+            현재 설정된 알림 시간:
+            <span id="currentSendHour" th:text="${sendHour != null ? sendHour + '시' : '미설정'}"></span>
+        </p>
+    </div>
 </div>
 
-<!-- 키워드 목록 -->
-<ul>
+<!-- 메시지 출력 -->
+<div th:if="${message}" style="color: green; margin-top: 30px;">
+    <p th:text="${message}"></p>
+</div>
+<hr/>
+
+<!-- 에러 메시지 출력 -->
+<div th:if="${error}" style="color: red; margin-top: 10px;">
+    <p th:text="${error}"></p>
+</div>
+
+<!-- 키워드 목록은 하단에 별도 표시 -->
+<h3>나의 키워드 목록</h3>
+<ul class="keyword-list">
     <li th:each="keyword : ${keywords}">
         <span th:text="${keyword.name}"></span>
         <form th:action="@{/keywords/delete}" method="post" style="display:inline;">
@@ -78,32 +132,5 @@
         </form>
     </li>
 </ul>
-
-<hr/>
-<h3>뉴스 알림 시간 설정</h3>
-<form th:action="@{/send-hour}" method="post" style="margin-bottom:20px;">
-    <label for="sendHour">시간(0~23):</label>
-    <select name="sendHour" id="sendHour" required>
-        <option th:each="h : ${#numbers.sequence(0, 23)}"
-                th:value="${h}"
-                th:text="${h}"
-                th:selected="${h} == ${sendHour}">
-        </option>
-    </select>
-    <button type="submit">저장</button>
-</form>
-<p>
-    현재 설정된 알림 시간:
-    <span th:text="${sendHour != null ? sendHour + '시' : '미설정'}"></span>
-</p>
-<hr/>
-
-<!-- 키워드 추가 폼 -->
-<h3>키워드 추가</h3>
-<form th:action="@{/keywords/add}" method="post">
-    <input type="text" name="keyword" required>
-    <button type="submit">추가</button>
-</form>
-
 </body>
 </html>

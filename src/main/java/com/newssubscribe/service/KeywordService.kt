@@ -6,6 +6,7 @@ import com.newssubscribe.repository.KeywordRepository
 import com.newssubscribe.repository.SubscribeRepository
 import com.newssubscribe.repository.UserRepository
 import org.springframework.stereotype.Service
+import com.newssubscribe.util.InputValidator
 
 @Service
 class KeywordService(
@@ -25,6 +26,14 @@ class KeywordService(
 
     // 2. 키워드 추가
     fun addKeyword(email: String, keywordName: String) {
+        if (keywordName.length > 100) {
+            throw IllegalArgumentException("키워드는 100자 이하로 작성 해주세요.")
+        }
+
+        if (InputValidator.isMaliciousInput(keywordName)) {
+            throw IllegalArgumentException("입력에 위험한 문자열이 포함되어 있습니다.")
+        }
+
         val user = userRepository.findByEmail(email)
             ?: throw IllegalArgumentException("사용자를 찾을 수 없습니다.")
 

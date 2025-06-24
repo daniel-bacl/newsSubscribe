@@ -33,13 +33,18 @@ class KeywordController(
     fun addKeyword(
         @RequestParam keyword: String,
         session: HttpSession,
-        model: Model
+        redirect: RedirectAttributes
     ): String {
         val email = session.getAttribute("email") as? String
             ?: return "redirect:/"
 
-        keywordService.addKeyword(email, keyword)
-        model.addAttribute("message", "키워드가 추가되었습니다.")
+        try {
+            keywordService.addKeyword(email, keyword)
+            redirect.addFlashAttribute("message", "키워드가 추가되었습니다.")
+        } catch (e: IllegalArgumentException) {
+            redirect.addFlashAttribute("error", e.message)
+        }
+
         return "redirect:/main"
     }
 

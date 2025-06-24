@@ -17,6 +17,14 @@ class AuthService(
             throw IllegalArgumentException("이메일 형식이 올바르지 않습니다.")
         }
 
+        // 기존 사용자 여부 확인
+        val existingUser = userRepository.findByEmail(email)
+
+        // 이미 인증 코드가 존재하면 중복 요청으로 간주
+        if (existingUser != null && existingUser.authCode != null) {
+            throw IllegalStateException("이미 요청하신 인증 코드가 있습니다. 메일을 확인해 주세요.")
+        }
+
         // 랜덤 8자리 코드 생성
         val code = generateCode()
 
@@ -25,7 +33,6 @@ class AuthService(
         mailSenderService.send(email, subject, body)
 
         // DB 저장 (기존 사용자면 update, 아니면 insert)
-        val existingUser = userRepository.findByEmail(email)
         if (existingUser != null) {
             existingUser.authCode = code
             existingUser.createdAt = LocalDateTime.now()
